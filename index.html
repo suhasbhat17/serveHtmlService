@@ -1,0 +1,130 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            .button {
+              border: none;
+              color: white;
+              padding: 6px 6px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+              font-size: 12px;
+              margin: 4px 2px;
+              cursor: pointer;
+              background-color: grey;
+          }
+          .button:focus {
+              outline: none;
+              box-shadow: none;
+              background-color: red;
+          }
+          #container {
+              position: absolute;
+              bottom: 0;
+              padding-bottom:4%;
+              margin-left: 5%;
+              height: 25%;
+              display:inline-block;
+              vertical-align: middle;
+              width: 100%;
+          }
+          #endemic {
+            visibility: hidden;
+        }
+        #nonEndemic {
+            visibility: hidden;
+        }
+
+        .image-wrapper {
+            display:inline-block;
+            vertical-align: top;
+            padding: 5px;
+            width: 40%;
+            height: 100%;
+        }
+        .button-wrapper {
+            display:inline-block;
+            vertical-align: middle;
+            padding: 5px;
+        }
+
+        img {
+           width: 120px;
+           height: 100%;
+       }
+
+       html {
+          background-color: transparent !important;
+      }
+
+      .slogan{
+         color: white;
+         font-size: 20px;
+     }
+     p {
+      margin-bottom: 0px;
+  }
+
+  .column {
+    float:left;
+}
+
+
+</style>
+</head>
+<body>
+    <div id="container">
+        <div class="column" style="width: 100px">
+            <img src="https://iili.io/505Yue.md.png">
+        </div>
+        <div class="column" style="margin-left: 20px;">
+            <p class="slogan"><strong>Better for them.<br>
+            Easier for you.</p>
+            <div class="button-wrapper">
+                <button id="endemic" class="button" onclick="startInteraction('Endemic')" autofocus>Endemic</button>
+                <button id="nonEndemic" class="button" onclick="startInteraction('Non-Endemic')">Non-Endemic</button>
+            </div>
+            <p id="hiddenMessage" style="font-size:10px;color:white;padding-left:10px;"><strong></p>
+            </div>
+        </div>
+        <script src="./bundle.js"></script>
+        <script type="text/javascript">
+            var adMgr;
+            window.onload = () => {
+                AlexaInteractiveAds.init({}).then(initResponse=> {
+                    const adsManager = initResponse.adsManager;
+                    console.log(adsManager);
+                    var capabilities;
+                    adsManager.retrieveCapabilities().then(capRes => {
+                        capabilities = capRes;
+                    });
+                    console.log('Retrieved capabilities:' + capabilities);
+                    if(capabilities == null || capabilities == undefined){
+                        console.error('No capabilities retrieved');
+                    }
+                    //else{
+                        adMgr = initResponse.adsManager;
+                    //}
+                });
+            };
+
+            //if(adMgr){
+                document.getElementById('nonEndemic').style.visibility = 'visible';
+                document.getElementById('endemic').style.visibility = 'visible';
+            //}
+            function startInteraction(type)
+            {
+                console.log('Starting Ads');
+                adMgr.start();
+                console.log('Sending message for type:' + type);
+                adMgr.send('{}');
+            }
+
+            window.onUnload = () => {
+                console.log('Ending Ads');
+                adMgr.end();
+            };
+        </script>
+    </body>
+    </html>
